@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --background: #000000;
+  --cell-border: #00A8A8;
+  --cell-boundary: #FFAB2D;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--background);
+}
+
+.tic-tac-toe {
+  margin: 0 auto;
+  width: 22rem;
+}
+
+@media (min-width: 768px) { 
+  .tic-tac-toe {
+    width: 30rem;
+  }
+} 
+
+.restart {
+  text-align: end;
+  padding-right: 1rem;
+  margin-bottom: 2rem;
+}
+
+.restart button{
+  width: 6rem;
+  height: 2rem;
+  background: rgba(0, 168, 168, 0.1);   
+  color: #fff;
+  border: 3px solid #FF0000;              
+  border-radius: 12px;
+  box-shadow:
+  0 0 4px   #FF0000,
+  0 0 10px  #FF0000,
+  0 0 20px  rgba(255,0,0,0.6);
+  transition: box-shadow 0.2s ease-in-out, background  0.2s ease-in-out;
+  cursor: pointer;
+
+}
+
+.restart button:hover {
+  background: rgba(0,168,168,0.2);
+  box-shadow:
+    /* stronger red glow on hover */
+    0 0 6px   #FF0000,
+    0 0 15px  #FF0000,
+    0 0 35px  rgba(255,0,0,0.7),
+    0 0 60px  rgba(255,0,0,0.4);
+}
+
+@media (min-width: 768px) { 
+  .restart button {
+    width: 7rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+} 
+
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#game-board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#game-board ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#game-board button {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 10px;
+  border-radius: 8px;
+  border: 3px solid #00A8A8;
+  background: rgba(0,168,168,0.1);
+  box-shadow:
+    0 0 5px   #00A8A8,
+    0 0 0px  #00A8A8,
+    0 0 30px  rgba(0,168,168,0.5),
+    0 0 60px  rgba(0,168,168,0.3);
+  transition: box-shadow 0.2s ease-in-out, background 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) { 
+  #game-board button {
+    width: 8rem;
+    height: 8rem;
+    margin: 1rem;
+    border-radius: 1rem;
+    box-shadow:
+    0 0 5px   #00A8A8,
+    0 0 15px  #00A8A8,
+    0 0 30px  rgba(0,168,168,0.5),
+    0 0 60px  rgba(0,168,168,0.3);
+  }
+} 
+
+#game-board button:hover {
+  /* pump up the glow on hover */
+  background: rgba(0,168,168,0.2);
+  box-shadow:
+    0 0 10px  #00A8A8,
+    0 0 10px  #00A8A8,
+    0 0 50px  rgba(0,168,168,0.6),
+    0 0 90px  rgba(0,168,168,0.4);
+}
+@media (min-width: 768px) { 
+  #game-board button:hover {
+    /* pump up the glow on hover */
+    background: rgba(0,168,168,0.2);
+    box-shadow:
+      0 0 10px  #00A8A8,
+      0 0 25px  #00A8A8,
+      0 0 50px  rgba(0,168,168,0.6),
+      0 0 90px  rgba(0,168,168,0.4);
+  }
+  
+} 
+
+.box-results {
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.results {
+  width: 70%;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+@media (min-width: 768px) { 
+  .results {
+    font-size: 1rem;
+  }
+} 
+
+
+
+
