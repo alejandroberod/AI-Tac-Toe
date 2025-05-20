@@ -1,22 +1,22 @@
-import botImage from "../assets/bot.png"
-
-export default function GameBoard({ board }) {
+export default function GameBoard({ onSelectSquare, board, activePlayer }) {
   return (
-      <div id="board">
-        <ol id="game-board">
-          {board.map((row, rowIndex) => (
-            <li key={rowIndex}>
-              <ol>
-                {row.map((col, colIndex) => (
-                  <li className="box" key={colIndex}>
-                    <button>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </li>
-          ))}
-        </ol>
-      </div>
+    <ol id="game-board">
+      {board.map((row, rowIndex) => (
+        <li key={rowIndex}>
+          <ol>
+            {row.map((playerSymbol, colIndex) => (
+              <li key={colIndex}>
+                <button className={`${playerSymbol === "X" && "user"} ${playerSymbol === 'O' && "bot"}`}
+                  onClick={() => onSelectSquare(rowIndex, colIndex)}
+                  disabled={playerSymbol !== null}
+                >
+                  {playerSymbol}
+                </button>
+              </li>
+            ))}
+          </ol>
+        </li>
+      ))}
+    </ol>
   );
 }
