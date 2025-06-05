@@ -5,6 +5,7 @@ import Player from "./Components/Player";
 import Log from "./Components/Log";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 import GameOver from "./Components/GameOver";
+import { setTurn } from "./http";
 
 const PLAYERS = {
   X: 'Player 1',
@@ -66,10 +67,10 @@ function deriveWinner(gameBoard, players) {
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
   const [players, setPlayers] = useState(PLAYERS);
+  const [loading, setLoading] = useState(false);
 
   const activePlayer = deriveActivePlayer(gameTurns);
   const gameBoard = deriveGameBoard(gameTurns);
-  console.log(gameBoard)
   const winner = deriveWinner(gameBoard, players);
   const hasDraw = gameTurns.length === 9 && !winner;
 
@@ -83,9 +84,25 @@ function App() {
       ];
 
       //Interacción con la IA
-
+      currentPlayer === "X" && callApi(updatedTurns);
       return updatedTurns;
     });
+  }
+
+  async function callApi(turn) {
+    const currentBoard = deriveGameBoard(turn);
+    try {
+      setLoading(true);
+      if (!winner && !hasDraw) {
+        setTurn(currentBoard);
+        // const {row, col} = await setTurn(currentBoard);
+        // handleSelectSquare(row, col);
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false);
   }
 
   function handleRestart() {
