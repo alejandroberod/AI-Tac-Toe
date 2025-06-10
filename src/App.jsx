@@ -8,9 +8,9 @@ import GameOver from "./Components/GameOver";
 import { setTurn } from "./http";
 
 const PLAYERS = {
-  X: 'Player 1',
-  O: 'IA'
-}
+  X: "Player 1",
+  O: "IA",
+};
 
 const initialGameBoard = [
   [null, null, null],
@@ -43,7 +43,7 @@ function deriveGameBoard(gameTurns) {
 
 function deriveWinner(gameBoard, players) {
   let winner = null;
-  
+
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol =
       gameBoard[combination[0].row][combination[0].column];
@@ -84,23 +84,33 @@ function App() {
       ];
 
       //Interacción con la IA
-      currentPlayer === "X" && callApi(updatedTurns);
+      // currentPlayer === "X" &&
+      callApi(updatedTurns, currentPlayer);
       return updatedTurns;
     });
   }
 
-  async function callApi(turn) {
+  async function callApi(turn, player) {
     const currentBoard = deriveGameBoard(turn);
+    const isWinner = deriveWinner(currentBoard, players);
+    let draw;
+
+    currentBoard.forEach((row) => {
+      if (!row.every((move) => move != null)) {
+        draw = false;
+        return
+      }
+      draw = true;
+    });
+
     try {
       setLoading(true);
-      if (!winner && !hasDraw) {
-        setTurn(currentBoard);
-        // const {row, col} = await setTurn(currentBoard);
-        // handleSelectSquare(row, col);
+      if (!isWinner && !draw && player === "X") {
+        const {row, col} = await setTurn(currentBoard);
+        handleSelectSquare(row, col);
       }
-      
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     setLoading(false);
   }
@@ -139,6 +149,9 @@ function App() {
           <GameOver winner={winner} onRestart={handleRestart} />
         )}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} activePlayer={activePlayer}/>
+        <dialog open>
+          <p>Hola</p>
+        </dialog>
       </div>
       <Log turns={gameTurns} />
     </main>

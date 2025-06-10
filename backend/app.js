@@ -84,6 +84,13 @@ app.post("/api/ai-tac-toe", async (req, res) => {
       Centro libre → (1,1).  
       Respuesta esperada: { "row": 1, "col": 1 }
 
+      Ejemplo 3: Gran amenaza, toma posición estratégica  
+      Tablero:  
+      [X, ., .,  
+      ., O, .,  
+      ., ., X] 
+      Respuesta esperada: { "row": 1, "col": 2 }
+
       Ejemplo 4: Elegir esquina si centro y bloqueo no aplican  
       Tablero:  
       [O, X, O,  
