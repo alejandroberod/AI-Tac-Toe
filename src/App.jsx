@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import GameBoard from "./Components/GameBoard";
 import Player from "./Components/Player";
@@ -6,6 +6,7 @@ import Log from "./Components/Log";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 import GameOver from "./Components/GameOver";
 import { setTurn } from "./http";
+import ThinkModal from "./Components/Thinking/ThinkModal";
 
 const PLAYERS = {
   X: "Player 1",
@@ -67,7 +68,16 @@ function deriveWinner(gameBoard, players) {
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
   const [players, setPlayers] = useState(PLAYERS);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const dialog = useRef();
+
+  useEffect(() => {
+    if (loading) {
+      dialog.current.showModal();
+    } else {
+      dialog.current.close();
+    }
+  }, [loading])
 
   const activePlayer = deriveActivePlayer(gameTurns);
   const gameBoard = deriveGameBoard(gameTurns);
@@ -105,14 +115,16 @@ function App() {
 
     try {
       setLoading(true);
-      if (!isWinner && !draw && player === "X") {
-        const {row, col} = await setTurn(currentBoard);
-        handleSelectSquare(row, col);
-      }
+      // if (!isWinner && !draw && player === "X") {
+      //   const {row, col} = await setTurn(currentBoard);
+      //   handleSelectSquare(row, col);
+      // }
     } catch (error) {
       console.log(error);
     }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   }
 
   function handleRestart() {
@@ -149,9 +161,7 @@ function App() {
           <GameOver winner={winner} onRestart={handleRestart} />
         )}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} activePlayer={activePlayer}/>
-        <dialog open>
-          <p>Hola</p>
-        </dialog>
+        <ThinkModal ref={dialog}/>
       </div>
       <Log turns={gameTurns} />
     </main>

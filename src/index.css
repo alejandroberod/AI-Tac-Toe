@@ -316,6 +316,20 @@ ol {
   margin-top: 1.5rem;
 }
 
+#modal {
+  width: 30%;
+  background-color: transparent;
+  /* border: none;
+  outline: none; */
+  color: #00ADB5;
+  text-align: center;
+
+}
+
+#modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
 @keyframes slide-in-from-left {
   0% {
     opacity: 0;
