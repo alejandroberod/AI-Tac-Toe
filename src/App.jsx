@@ -6,7 +6,7 @@ import Log from "./Components/Log";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 import GameOver from "./Components/GameOver";
 import { setTurn } from "./http";
-import ThinkModal from "./Components/Thinking/ThinkModal";
+import ThinkModal from "./components/Thinking/ThinkModal";
 
 const PLAYERS = {
   X: "Player 1",
@@ -68,7 +68,7 @@ function deriveWinner(gameBoard, players) {
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
   const [players, setPlayers] = useState(PLAYERS);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const dialog = useRef();
 
   useEffect(() => {
@@ -115,16 +115,16 @@ function App() {
 
     try {
       setLoading(true);
-      // if (!isWinner && !draw && player === "X") {
-      //   const {row, col} = await setTurn(currentBoard);
-      //   handleSelectSquare(row, col);
-      // }
+      if (!isWinner && !draw && player === "X") {
+        const {row, col} = await setTurn(currentBoard);
+        handleSelectSquare(row, col);
+      }
+      setLoading(false);
+      // setTimeout(() => {
+      // }, 3000);
     } catch (error) {
       console.log(error);
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
   }
 
   function handleRestart() {

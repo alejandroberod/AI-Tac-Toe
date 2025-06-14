@@ -44,8 +44,7 @@ app.post("/api/ai-tac-toe", async (req, res) => {
   const messages = [
     {
       role: "system",
-      content:
-        `
+      content: `
       Eres un experto invencible en Tic-Tac-Toe. Juegas siempre como 'O' y tu salida debe ser SIEMPRE un JSON válido: { "row": number, "col": number }
 
       Reglas y orden de prioridades:
@@ -114,11 +113,51 @@ app.post("/api/ai-tac-toe", async (req, res) => {
       messages,
     });
     const { row, col } = JSON.parse(response.choices[0].message.content);
-    return res.status(200).json({row, col});
+    return res.status(200).json({ row, col });
   } catch (error) {
     console.log(error);
   }
 });
+
+// app.get("/api/ai-tac-toe/thinking", async (req, res) => {
+//   const messages = [
+//     {
+//       role: "system",
+//       content:
+//         `Eres TicTacToeBot, una IA experta en jugar tres en raya y en lanzar comentarios sarcásticos durante tu tiempo de cómputo. Cada vez que el usuario te diga "Tu turno" debes generar **exactamente una** línea corta (1-2 frases) que haga burla amistosa al usuario. Con un tono juguetón, insultante de forma grosera o discriminatoria. Ejemplos de formato: 
+//           - “Un momento… conteniendo la risa.” 
+//           - “¿Ese es tu gran plan? Pareces adivinar con los pies.”
+//           - “Cargando triunfo… o vergüenza, veamos.”
+        
+//         No uses estos ejemplos, son solo eso, ejemplos, sé creativo
+
+//           **Instrucciones:**\n
+//             1. Selecciona al azar uno de tus mensajes tras cada petición de jugada.
+//             2. Mantén las frases muy cortas y con humor fuerte.
+//             4. No incluyas emojis, ni explicaciones; solo la frase de burla.
+//             _Tu única tarea en este rol es devolver esa línea de texto.
+        
+//         tu salida debe ser SIEMPRE un JSON válido: { "comment": string }
+//         `,
+//     },
+//     {
+//       role: "user",
+//       content: "Tu turno"
+//     }
+//   ];
+
+//     try {
+//     const response = await openai.chat.completions.create({
+//       model: "gpt-4.1-nano",
+//       messages,
+//     });
+//     const { comment } = JSON.parse(response.choices[0].message.content);
+//     return res.status(200).json({ comment });
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+// });
 
 app.listen(PORT, () => {
   console.log(`Servidor en puerto ${PORT}`);

@@ -197,7 +197,6 @@ ol {
   height: 8rem;
   border: none;
   background: #aca788;
-  color: #003f3b;
   font-size: 5rem;
   cursor: pointer;
   font-family: 'Caprasimo', cursive;
@@ -208,10 +207,12 @@ ol {
 
 #game-board button.user {
   box-shadow: 0 0 20px rgba(0, 187, 255, 0.8);
+  color: #003f3b;
 }
 
 #game-board button.bot {
   box-shadow: 0 0 20px rgba(255, 77, 77, 0.8);
+  color: #662525;
 }
 
 #game-board button:hover:enabled {
@@ -319,8 +320,8 @@ ol {
 #modal {
   width: 30%;
   background-color: transparent;
-  /* border: none;
-  outline: none; */
+  border: none;
+  outline: none;
   color: #00ADB5;
   text-align: center;
 
