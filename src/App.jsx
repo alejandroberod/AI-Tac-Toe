@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-import GameBoard from "./Components/GameBoard";
-import Player from "./Components/Player";
-import Log from "./Components/Log";
+import GameBoard from "./components/GameBoard";
+import Player from "./components/Player";
+import Log from "./components/Log";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
-import GameOver from "./Components/GameOver";
+import GameOver from "./components/GameOver";
 import { setTurn } from "./http";
 import ThinkModal from "./components/Thinking/ThinkModal";
+import ErrorPage from "./components/ErrorPage";
 
 const PLAYERS = {
   X: "Player 1",
@@ -69,6 +70,7 @@ function App() {
   const [gameTurns, setGameTurns] = useState([]);
   const [players, setPlayers] = useState(PLAYERS);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
   const dialog = useRef();
 
   useEffect(() => {
@@ -77,7 +79,7 @@ function App() {
     } else {
       dialog.current.close();
     }
-  }, [loading])
+  }, [loading]);
 
   const activePlayer = deriveActivePlayer(gameTurns);
   const gameBoard = deriveGameBoard(gameTurns);
@@ -92,9 +94,6 @@ function App() {
         { square: { row: rowIndex, col: colIndex }, player: currentPlayer },
         ...prevTurns,
       ];
-
-      //Interacción con la IA
-      // currentPlayer === "X" &&
       callApi(updatedTurns, currentPlayer);
       return updatedTurns;
     });
@@ -103,32 +102,34 @@ function App() {
   async function callApi(turn, player) {
     const currentBoard = deriveGameBoard(turn);
     const isWinner = deriveWinner(currentBoard, players);
-    let draw;
 
-    currentBoard.forEach((row) => {
-      if (!row.every((move) => move != null)) {
-        draw = false;
-        return
-      }
-      draw = true;
-    });
+    const draw = currentBoard.every((row) => row.every((move) => move != null));
 
     try {
       setLoading(true);
       if (!isWinner && !draw && player === "X") {
-        const {row, col} = await setTurn(currentBoard);
+        const response = await setTurn(currentBoard);
+        if (response.error) {
+          console.error("Error desde la API:", response.error);
+          setError(response.error);
+          return;
+        }
+        const { row, col } = response;
         handleSelectSquare(row, col);
       }
-      setLoading(false);
-      // setTimeout(() => {
-      // }, 3000);
     } catch (error) {
-      console.log(error);
+      console.error("Error de red o inesperado:", error);
+      setError(error.message || "Error desconocido");
+    } finally {
+      setLoading(false);
     }
   }
 
   function handleRestart() {
     setGameTurns([]);
+    if (error) {
+      setError(false)
+    }
   }
 
   function handlePlayerNameChange(symbol, newName) {
@@ -160,8 +161,13 @@ function App() {
         {(winner || hasDraw) && (
           <GameOver winner={winner} onRestart={handleRestart} />
         )}
-        <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} activePlayer={activePlayer}/>
-        <ThinkModal ref={dialog}/>
+        {error && <ErrorPage errorMessage={error} onRestart={handleRestart} />}
+        <GameBoard
+          onSelectSquare={handleSelectSquare}
+          board={gameBoard}
+          activePlayer={activePlayer}
+        />
+        <ThinkModal ref={dialog} />
       </div>
       <Log turns={gameTurns} />
     </main>

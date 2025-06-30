@@ -90,7 +90,14 @@ app.post("/api/ai-tac-toe", async (req, res) => {
       ., ., X] 
       Respuesta esperada: { "row": 1, "col": 2 }
 
-      Ejemplo 4: Elegir esquina si centro y bloqueo no aplican  
+      Ejemplo 4: Gran amenaza, toma posición estratégica  
+      Tablero:  
+      [., ., X,  
+      ., O, .,  
+      X, ., .] 
+      Respuesta esperada: { "row": 1, "col": 2 }
+
+      Ejemplo 5: Elegir esquina si centro y bloqueo no aplican  
       Tablero:  
       [O, X, O,  
       X, X, O,  
@@ -107,57 +114,51 @@ app.post("/api/ai-tac-toe", async (req, res) => {
     },
   ];
 
-  try {
+try {
     const response = await openai.chat.completions.create({
       model: "o4-mini",
       messages,
     });
-    const { row, col } = JSON.parse(response.choices[0].message.content);
-    return res.status(200).json({ row, col });
+
+    const content = response.choices[0].message.content;
+
+    try {
+      const { row, col } = JSON.parse(content);
+      return res.status(200).json({ row, col });
+    } catch (jsonError) {
+      console.error("Error al parsear JSON de la IA:", content);
+      return res.status(500).json({
+        error: "La respuesta del modelo no es un JSON válido.",
+        rawResponse: content,
+      });
+    }
+
   } catch (error) {
-    console.log(error);
+    console.error("Error al llamar a OpenAI:", error);
+
+    if (error.status === 401) {
+      return res.status(401).json({ error: "Clave API inválida o no autorizada." });
+    }
+
+    if (error.status === 404) {
+      return res.status(404).json({ error: "Modelo no encontrado o incorrecto." });
+    }
+
+    if (error.status === 429) {
+      return res.status(429).json({ error: "Límite de uso de la API excedido. Intenta más tarde." });
+    }
+
+    if (error.status === 500) {
+      return res.status(500).json({ error: "Error interno de OpenAI. Intenta más tarde." });
+    }
+
+    // Otros errores inesperados
+    return res.status(500).json({
+      error: "Error desconocido al procesar la solicitud.",
+      details: error.message || error.toString(),
+    });
   }
 });
-
-// app.get("/api/ai-tac-toe/thinking", async (req, res) => {
-//   const messages = [
-//     {
-//       role: "system",
-//       content:
-//         `Eres TicTacToeBot, una IA experta en jugar tres en raya y en lanzar comentarios sarcásticos durante tu tiempo de cómputo. Cada vez que el usuario te diga "Tu turno" debes generar **exactamente una** línea corta (1-2 frases) que haga burla amistosa al usuario. Con un tono juguetón, insultante de forma grosera o discriminatoria. Ejemplos de formato: 
-//           - “Un momento… conteniendo la risa.” 
-//           - “¿Ese es tu gran plan? Pareces adivinar con los pies.”
-//           - “Cargando triunfo… o vergüenza, veamos.”
-        
-//         No uses estos ejemplos, son solo eso, ejemplos, sé creativo
-
-//           **Instrucciones:**\n
-//             1. Selecciona al azar uno de tus mensajes tras cada petición de jugada.
-//             2. Mantén las frases muy cortas y con humor fuerte.
-//             4. No incluyas emojis, ni explicaciones; solo la frase de burla.
-//             _Tu única tarea en este rol es devolver esa línea de texto.
-        
-//         tu salida debe ser SIEMPRE un JSON válido: { "comment": string }
-//         `,
-//     },
-//     {
-//       role: "user",
-//       content: "Tu turno"
-//     }
-//   ];
-
-//     try {
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-4.1-nano",
-//       messages,
-//     });
-//     const { comment } = JSON.parse(response.choices[0].message.content);
-//     return res.status(200).json({ comment });
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-// });
 
 app.listen(PORT, () => {
   console.log(`Servidor en puerto ${PORT}`);

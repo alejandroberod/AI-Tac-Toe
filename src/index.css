@@ -23,14 +23,10 @@ html {
 }
 
 body {
-  background: radial-gradient(
-    circle at top,
-    rgba(0, 173, 181, 0.98),
-    rgba(0, 100, 105, 0.87)
-  );
+  background: #0e9fa6;
   background-repeat: repeat;
   background-size: 100% 100%, 30% 30%, 100% 100%;
-  min-height: 110rem;
+  /* min-height: 110rem; */
 }
 
 header {
@@ -243,6 +239,11 @@ ol {
   color: #56d2fc;
   margin: 0;
 }
+#game-over.error-page h2 {
+  color: var(--rojo);
+  font-family: 'Roboto Slab' ,sans-serif;
+  padding: 2rem;
+}
 
 #game-over p {
   font-size: 2rem;
@@ -270,6 +271,19 @@ ol {
   transform: scale(1.1);
   box-shadow: 0 0 20px rgba(0, 187, 255, 0.8);
 }
+
+#game-over.error-page button {
+  border: 2px solid #FF4D4D;
+  color: #FF4D4D;
+  box-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
+}
+
+#game-over.error-page button:hover {
+  background: #FF4D4D;
+  color: #4d0000;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.8);
+}
+
 
 #log {
   max-width: 20rem;
